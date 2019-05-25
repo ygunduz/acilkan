@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Picker, Dimensions } from 'react-native';
+import { View, KeyboardAvoidingView, Picker, Dimensions, Platform, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Input, ThemeProvider, Text, Divider, Button } from 'react-native-elements';
 import { logoutUser, profileUpdated, updateProfile } from '../actions';
@@ -57,9 +57,16 @@ class ProfilePage extends Component {
         }
     }
 
+    
+
     render() {
         return (
-            <View style={styles.containerStyle}>
+            <ScrollView style={{backgroundColor: '#ffe3d8' }}>
+            <KeyboardAvoidingView 
+                style={styles.containerStyle} 
+                behavior={Platform.OS === "ios" ? "padding" : null}
+                enabled
+            >
                 <Spinner
                     visible={this.state.loading}
                     textContent={'Lütfen Bekleyiniz'}
@@ -202,7 +209,8 @@ class ProfilePage extends Component {
                         }}
                     />
                 </ThemeProvider>
-            </View>
+            </KeyboardAvoidingView>
+            </ScrollView>
         );
     }
 }
