@@ -11,8 +11,8 @@ export default combineReducers({
     auth: AuthReducer,
     districts: DistrictReducer,
     bloodGroups: BloodGroupReducer,
+    user: UserReducer,
     profileForm: ProfileFormReducer,
     hospitals: HospitalReducer,
-    requestForm: RequestFormReducer,
-    user: UserReducer
+    requestForm: RequestFormReducer
 });

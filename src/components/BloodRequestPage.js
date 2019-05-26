@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView , Dimensions, Picker, ScrollView } from 'react-native';
+import { KeyboardAvoidingView , Dimensions, Picker, ScrollView, ToastAndroid } from 'react-native';
 import { Input, ThemeProvider, Text, Divider, Button } from 'react-native-elements';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
-import { requestFormUpdated, setUser } from '../actions';
+import { requestFormUpdated, setUser, clearRequestForm } from '../actions';
 import { showAlert, checkUserValidity, constants } from '../util';
 import firebase from 'firebase';
 
@@ -63,9 +63,15 @@ class BloodRequestPage extends Component {
                 bloodGroup,
                 city: 'İstanbul',
                 created: firebase.database.ServerValue.TIMESTAMP
+            } , (err) => {
+                if(!err){
+                    this.props.clearRequestForm();
+                }
+                else{
+                    ToastAndroid.show('Talep Gönderilemedi');
+                }
+                this.setState({ loading: false });
             });
-
-            this.setState({ loading: false });
         }
     }
 
@@ -225,4 +231,4 @@ const styles = {
     }
 }
 
-export default connect(mapStateToProps, { requestFormUpdated, setUser })(BloodRequestPage);
+export default connect(mapStateToProps, { requestFormUpdated, setUser, clearRequestForm })(BloodRequestPage);
