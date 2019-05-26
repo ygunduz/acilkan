@@ -5,7 +5,7 @@ import {
 const INITIAL_STATE = {
     district: 'Adalar',
     bloodGroup: 'A+',
-    hospital: 'Acıbadem Maslak Hastanesi',
+    hospital: '',
     description: '',
 }
 

@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import { AsyncStorage, ToastAndroid } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { setUser } from './UserActions';
+import { getCurrentUserData } from '../util';
 import { 
     EMAIL_CHANGED, 
     PASSWORD_CHANGED, 
@@ -84,4 +86,8 @@ const loginUserSuccess = (dispatch, user , email , password) => {
 
             Actions.main();
         })
+    
+    getCurrentUserData().then(user => {
+        dispatch(setUser(user));
+    })
 }

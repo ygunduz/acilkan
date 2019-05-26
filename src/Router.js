@@ -5,6 +5,7 @@ import MainScreen from './components/MainScreen';
 import ProfilePage from './components/ProfilePage';
 import SplashScreen from './components/SplashScreen';
 import BloodRequestPage from './components/BloodRequestPage';
+import RequestList from './components/RequestList';
 
 const RouterComponent = () => {
     return (
@@ -67,6 +68,18 @@ const RouterComponent = () => {
                         key="bloodRequest"
                         component={BloodRequestPage}
                         title="Acil Kan Talep Et"
+                    />
+                    <Scene
+                        navigationBarStyle={{
+                            backgroundColor: '#B91E25'
+                        }}
+                        navBarButtonColor='#ffffff'
+                        titleStyle={{
+                            color: 'white'
+                        }}
+                        key="requestList"
+                        component={RequestList}
+                        title="Bekleyen Talepler"
                     />
                 </Stack>
             </Stack>

@@ -6,3 +6,4 @@ export const LOGIN_USER = 'login_user';
 export const LOGOUT_USER = 'logout_user';
 export const PROFILE_UPDATED = 'profile_updated';
 export const REQUEST_FORM_UPDATED = 'request_from_updated';
+export const SET_USER = 'set_user';

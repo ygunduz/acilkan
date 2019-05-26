@@ -3,12 +3,12 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
+    district: 'Adalar',
+    bloodGroup: 'A+',
     name: '',
     surname: '',
     phone: '',
     adress: '',
-    district: '',
-    bloodGroup: '',
     loading: false
 }
 

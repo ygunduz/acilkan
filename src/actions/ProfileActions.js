@@ -1,6 +1,7 @@
 import { ToastAndroid } from 'react-native';
 import { PROFILE_UPDATED } from './types';
 import firebase from 'firebase';
+import { setUser } from './UserActions';
 
 export const profileUpdated = ({ prop, value }) => {
     return {
@@ -18,7 +19,11 @@ export const updateProfile = ({ name, surname, phone, adress, district, bloodGro
             name, surname, phone, adress, district, bloodGroup
         }).then(() => {
             ToastAndroid.show('Güncelleme Başarılı', ToastAndroid.SHORT);
+            const user = {
+                name, surname, phone, adress, district, bloodGroup
+            }
             dispatch(profileUpdated({prop : 'loading' , value : false}));
+            dispatch(setUser(user));
         }).catch(() => {
             ToastAndroid.show('Güncelleme Başarısız', ToastAndroid.SHORT);
             dispatch(profileUpdated({prop : 'loading' , value : false}));

@@ -3,12 +3,13 @@ import { View, StatusBar, Dimensions } from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
+import { constants }  from '../util';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class MainScreen extends Component {
     componentWillMount() {
-        StatusBar.setBackgroundColor('#9e0404');
+        StatusBar.setBackgroundColor(constants.colors.statusBarColor);
     }
 
     render() {
@@ -40,6 +41,7 @@ class MainScreen extends Component {
                     titleStyle={styles.buttonTitleStyle}
                     containerStyle={styles.buttonContainerStyle}
                     buttonStyle={styles.buttonStyle}
+                    onPress={() => Actions.requestList()}
                 />
                 <Button
                     icon={
@@ -62,7 +64,7 @@ class MainScreen extends Component {
 
 const styles = {
     containerStyle: {
-        backgroundColor: '#ffe3d8',
+        backgroundColor: constants.colors.viewBackgroundColor,
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
@@ -73,7 +75,7 @@ const styles = {
     },
     buttonStyle: {
         height: 50,
-        backgroundColor: '#B91E25',
+        backgroundColor: constants.colors.defaultButtonColor,
         borderRadius: 12
     },
     buttonTitleStyle: {

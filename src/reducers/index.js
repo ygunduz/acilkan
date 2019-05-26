@@ -5,6 +5,7 @@ import BloodGroupReducer from './BloodGroupReducer';
 import ProfileFormReducer from './ProfileFormReducer';
 import HospitalReducer from './HospitalReducer';
 import RequestFormReducer from './RequestFormReducer';
+import UserReducer from './UserReducer';
 
 export default combineReducers({
     auth: AuthReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
     bloodGroups: BloodGroupReducer,
     profileForm: ProfileFormReducer,
     hospitals: HospitalReducer,
-    requestForm: RequestFormReducer
+    requestForm: RequestFormReducer,
+    user: UserReducer
 });

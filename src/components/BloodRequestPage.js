@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView , Dimensions, Picker, ScrollView } from 'react-native';
 import { Input, ThemeProvider, Text, Divider, Button } from 'react-native-elements';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { connect } from 'react-redux';
-import { requestFormUpdated } from '../actions';
+import { requestFormUpdated, setUser } from '../actions';
+import { showAlert, checkUserValidity, constants } from '../util';
+import firebase from 'firebase';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class BloodRequestPage extends Component {
+
+    state = { loading : false }
 
     renderPickerBloods() {
         return this.props.bloodGroups.map(blood =>
@@ -41,10 +46,38 @@ class BloodRequestPage extends Component {
         )
     }
 
+    sendRequest() {
+        if(!this.props.description || !this.props.hospital){
+            showAlert('Hata' , 'Lütfen Tüm Alanları Doldurunuz!');
+        }else if(!checkUserValidity(this.props.user)) {
+            showAlert('Hata' , 'Lütfen Kullanıcı Bilgilerinizi Doldurunuz!');
+        }else {
+            this.setState({ loading: true });
+            const { user , hospital , description , district , bloodGroup } = this.props;
+            var reqsRef = firebase.database().ref('/requests');
+            const newReqRef = reqsRef.push({
+                user,
+                hospital,
+                description,
+                district,
+                bloodGroup,
+                city: 'İstanbul',
+                created: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            this.setState({ loading: false });
+        }
+    }
+
     render() {
         return (
-            <ScrollView style={{backgroundColor: '#ffe3d8' }}>
+            <ScrollView style={{backgroundColor: constants.colors.viewBackgroundColor }}>
             <KeyboardAvoidingView style={styles.containerStyle} behavior="position" enabled>
+                <Spinner
+                    visible={this.state.loading}
+                    textContent={'Lütfen Bekleyiniz'}
+                    textStyle={{color: '#fff'}}
+                />
                 <ThemeProvider
                     theme={{
                         Input: {
@@ -54,17 +87,17 @@ class BloodRequestPage extends Component {
                             inputContainerStyle: {
                                 borderRadius: 16,
                                 borderWidth: 1,
-                                borderColor: '#9e0404',
+                                borderColor: constants.colors.inputBorderColor,
                                 height: 45,
                                 marginTop: 5
                             },
-                            placeholderTextColor: '#ce6b6b',
+                            placeholderTextColor: constants.colors.placeholderTextColor,
                             inputStyle: {
                                 marginLeft: 10,
-                                color: '#9e0404',
+                                color: constants.colors.inputColor,
                             },
                             labelStyle: {
-                                color: '#9e0404',
+                                color: constants.colors.labelColor,
                                 fontWeight: 'normal',
                                 fontSize: 16
                             },
@@ -74,14 +107,14 @@ class BloodRequestPage extends Component {
                         Text: {
                             style: {
                                 marginLeft: 12,
-                                color: '#9e0404',
+                                color: constants.colors.labelColor,
                                 fontWeight: 'normal',
                                 fontSize: 16
                             }
                         },
                         Divider: {
                             style: {
-                                backgroundColor: '#9e0404',
+                                backgroundColor: constants.colors.dividerColor,
                                 height: 0.2,
                                 marginTop: 3,
                                 width: SCREEN_WIDTH
@@ -91,7 +124,8 @@ class BloodRequestPage extends Component {
                             buttonStyle: {
                                 borderRadius: 8,
                                 width: SCREEN_WIDTH - 20,
-                                marginLeft: 10
+                                marginLeft: 10,
+                                backgroundColor: constants.colors.defaultButtonColor
                             }
                         }
                     }}
@@ -132,6 +166,7 @@ class BloodRequestPage extends Component {
                             this.props.requestFormUpdated({ prop: 'hospital', value: value })
                         }}
                     >
+                        <Picker.Item label='Hastane Seçiniz' value='' />
                         {this.renderPickerHospitals()}
                     </Picker>
                     <Divider />
@@ -146,6 +181,11 @@ class BloodRequestPage extends Component {
                             this.props.requestFormUpdated({ prop: 'description' , value: text})
                         }}
                     />
+                    <Divider />
+                    <Button
+                        title="Kaydet"
+                        onPress={ this.sendRequest.bind(this) }
+                    /> 
                 </ThemeProvider>
             </KeyboardAvoidingView>
             </ScrollView>
@@ -154,8 +194,6 @@ class BloodRequestPage extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
-
     return {
         districts: state.districts,
         bloodGroups: state.bloodGroups,
@@ -163,13 +201,14 @@ const mapStateToProps = state => {
         hospitals: state.hospitals,
         district: state.requestForm.district,
         hospital: state.requestForm.hospital,
-        description: state.requestForm.description
+        description: state.requestForm.description,
+        user: state.user.user
     }
 }
 
 const styles = {
     containerStyle: {
-        backgroundColor: '#ffe3d8',
+        backgroundColor: constants.colors.viewBackgroundColor,
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
@@ -178,7 +217,7 @@ const styles = {
         height: 50,
         width: SCREEN_WIDTH - 10,
         marginLeft: 5,
-        color: '#000'
+        color: constants.colors.pickerColor
     },
     pickerContainerStyle: {
         flexDirection: 'row',
@@ -186,4 +225,4 @@ const styles = {
     }
 }
 
-export default connect(mapStateToProps, { requestFormUpdated })(BloodRequestPage);
+export default connect(mapStateToProps, { requestFormUpdated, setUser })(BloodRequestPage);

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { View, KeyboardAvoidingView, Picker, Dimensions, Platform, ScrollView } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Input, ThemeProvider, Text, Divider, Button } from 'react-native-elements';
-import { logoutUser, profileUpdated, updateProfile } from '../actions';
-import firebase from 'firebase';
+import { logoutUser, profileUpdated, updateProfile, setUser } from '../actions';
+import { getCurrentUserData, showAlert, constants } from '../util';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -15,18 +15,13 @@ class ProfilePage extends Component {
     componentWillMount() {
         this.setState({loading: true})
 
-        var userID = firebase.auth().currentUser.uid;
-        firebase.database().ref('/users/' + userID).on('value' , 
-            (snapshot) => { 
-                var user = snapshot.val();
-                if(user) {
-                    Object.keys(user).forEach(e => {
-                        this.props.profileUpdated({prop : e , value: user[e]})
-                    });
-                }
-                this.setState({loading : false})
-            }
-        );
+        getCurrentUserData().then((user) => {
+            Object.keys(user).forEach(e => {
+                this.props.profileUpdated({prop : e , value: user[e]});
+            });
+            this.props.setUser(user);
+            this.setState({loading : false});
+        }).catch((err) => this.setState({loading : false}))
     }
 
     renderPickerDistricts() {
@@ -52,8 +47,12 @@ class ProfilePage extends Component {
     updateProfile() {
         const { name, surname, phone, adress, bloodGroup, district } = this.props;
 
-        if(!this.state.loading && !this.props.loading){
+        const isValid = name && surname && phone && adress && bloodGroup && district;
+
+        if(isValid && !this.state.loading && !this.props.loading){
             this.props.updateProfile({ name, surname, phone, adress, district, bloodGroup })
+        }else{
+            showAlert('Hata' , 'Lütfen Tüm Alanları Doldurunuz.');
         }
     }
 
@@ -61,7 +60,7 @@ class ProfilePage extends Component {
 
     render() {
         return (
-            <ScrollView style={{backgroundColor: '#ffe3d8' }}>
+            <ScrollView style={{backgroundColor: constants.colors.viewBackgroundColor }}>
             <KeyboardAvoidingView 
                 style={styles.containerStyle} 
                 behavior={Platform.OS === "ios" ? "padding" : null}
@@ -81,17 +80,17 @@ class ProfilePage extends Component {
                             inputContainerStyle: {
                                 borderRadius: 16,
                                 borderWidth: 1,
-                                borderColor: '#9e0404',
+                                borderColor: constants.colors.inputBorderColor,
                                 height: 45,
                                 marginTop: 5
                             },
-                            placeholderTextColor: '#ce6b6b',
+                            placeholderTextColor: constants.colors.placeholderTextColor,
                             inputStyle: {
                                 marginLeft: 10,
-                                color: '#9e0404',
+                                color: constants.colors.inputColor,
                             },
                             labelStyle: {
-                                color: '#9e0404',
+                                color: constants.colors.labelColor,
                                 fontWeight: 'normal',
                                 fontSize: 16
                             },
@@ -101,14 +100,14 @@ class ProfilePage extends Component {
                         Text: {
                             style: {
                                 marginLeft : 12,
-                                color: '#9e0404',
+                                color: constants.colors.textColor,
                                 fontWeight: 'normal',
                                 fontSize: 16
                             }
                         },
                         Divider: {
                             style: {
-                                backgroundColor: '#9e0404',
+                                backgroundColor: constants.colors.dividerColor,
                                 height: 0.2,
                                 marginTop: 3,
                                 width: SCREEN_WIDTH
@@ -193,7 +192,7 @@ class ProfilePage extends Component {
                     <Divider />
                     <Button
                         loading={ this.state.loading || this.props.loading }
-                        buttonStyle={{backgroundColor: '#9e0404'}}
+                        buttonStyle={{backgroundColor: constants.colors.defaultButtonColor}}
                         title="Kaydet"
                         onPress={ this.updateProfile.bind(this) }
                     /> 
@@ -217,7 +216,7 @@ class ProfilePage extends Component {
 
 const styles = {
     containerStyle: {
-        backgroundColor: '#ffe3d8',
+        backgroundColor: constants.colors.viewBackgroundColor,
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
@@ -226,13 +225,13 @@ const styles = {
         height: 50,
         width: SCREEN_WIDTH / 2 - 15,
         marginLeft: 5,
-        color: '#000'
+        color: constants.colors.pickerColor
     },
     bloodPickerStyle: {
         height: 50,
         width: SCREEN_WIDTH - 10,
         marginLeft: 5,
-        color: '#000'
+        color: constants.colors.pickerColor
     },
     pickerContainerStyle: {
         flexDirection: 'row',
@@ -249,8 +248,9 @@ const mapStateToProps = state => {
         adress: state.profileForm.adress,
         district: state.profileForm.district,
         bloodGroup: state.profileForm.bloodGroup,
-        loading: state.profileForm.loading
+        loading: state.profileForm.loading,
+        user: state.user.user
     }
 }
 
-export default connect(mapStateToProps, { logoutUser, profileUpdated, updateProfile })(ProfilePage);
+export default connect(mapStateToProps, { logoutUser, profileUpdated, updateProfile, setUser })(ProfilePage);
