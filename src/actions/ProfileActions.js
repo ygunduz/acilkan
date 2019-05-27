@@ -2,6 +2,7 @@ import { ToastAndroid } from 'react-native';
 import { PROFILE_UPDATED } from './types';
 import firebase from 'firebase';
 import { setUser } from './UserActions';
+import { subscribeTopic } from '../util';
 
 export const profileUpdated = ({ prop, value }) => {
     return {
@@ -24,6 +25,7 @@ export const updateProfile = ({ name, surname, phone, adress, district, bloodGro
             }
             dispatch(profileUpdated({prop : 'loading' , value : false}));
             dispatch(setUser(user));
+            subscribeTopic(bloodGroup);
         }).catch(() => {
             ToastAndroid.show('Güncelleme Başarısız', ToastAndroid.SHORT);
             dispatch(profileUpdated({prop : 'loading' , value : false}));

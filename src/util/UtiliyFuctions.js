@@ -1,5 +1,6 @@
 import { Alert } from 'react-native';
 import firebase from 'firebase';
+import RNFirebase from 'react-native-firebase';
 
 export const showAlert = (title, message) => {
   Alert.alert(
@@ -56,4 +57,28 @@ export const getAvatarURL = (group) => {
     default :
       return '';
   }
+}
+
+const map = {
+  "A+" : "apozitif",
+  "A-" : "anegatif",
+  "B+" : "bpozitif",
+  "B-" : "bnegatif",
+  "0+" : "0pozitif",
+  "0-" : "0negatif",
+  "AB+": "ABpozitif",
+  "AB-": "ABnegaitf"
+}
+
+export const subscribeTopic = (group) => {
+  const groups = ['A+' , 'A-' , 'B+' , 'B-' , '0+' , '0-' , 'AB+' , 'AB-'];
+  groups.map((thisGroup) => {
+    if(thisGroup != group){
+      RNFirebase.messaging().unsubscribeFromTopic(map[thisGroup]);
+    }
+    else{
+      RNFirebase.messaging().subscribeToTopic(map[thisGroup]);
+      console.log(map[thisGroup]);
+    }
+  })
 }

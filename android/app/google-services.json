@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "513705462205",
+    "firebase_url": "https://manager-2c613.firebaseio.com",
+    "project_id": "manager-2c613",
+    "storage_bucket": "manager-2c613.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513705462205:android:0b5b5308cd66072d",
+        "android_client_info": {
+          "package_name": "com.acilkan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513705462205-gm8en6rqta2coa3s9pi088icdm3i5shu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk-lJBgBs7SDReoWlCyGmy-hadaRefceM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513705462205-gm8en6rqta2coa3s9pi088icdm3i5shu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

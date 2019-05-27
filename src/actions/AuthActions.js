@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { AsyncStorage, ToastAndroid } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { setUser } from './UserActions';
-import { getCurrentUserData } from '../util';
+import { getCurrentUserData, subscribeTopic } from '../util';
 import { 
     EMAIL_CHANGED, 
     PASSWORD_CHANGED, 
@@ -51,6 +51,7 @@ export const logoutUser = () => {
                     })
 
                     ToastAndroid.show('Başarıyla Çıkış Yapıldı' , ToastAndroid.SHORT);
+                    subscribeTopic('');
 
                     Actions.auth();
                 })
