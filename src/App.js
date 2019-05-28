@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { YellowBox, View, Text, Linking } from 'react-native';
+import { YellowBox, View, Text, Linking, ToastAndroid } from 'react-native';
 import { Divider, Button } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import { Provider } from 'react-redux';
@@ -46,8 +46,9 @@ class App extends Component {
         * Triggered when a particular notification has been received in foreground
         * */
         this.notificationListener = RNFirebase.notifications().onNotification((notification) => {
-            const { data } = notification;
-            this.setState({ isModalVisible: true, item: data });
+            //const { data } = notification;
+            //this.setState({ isModalVisible: true, item: data });
+            ToastAndroid.show('Yeni Kan Talebi Mevcut Lütfen Talepler Ekranını Ziyaret Ediniz.', ToastAndroid.LONG);
         });
 
         /*

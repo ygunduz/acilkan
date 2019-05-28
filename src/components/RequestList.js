@@ -19,6 +19,10 @@ class RequestList extends Component {
         })
     }
 
+    componentWillUnmount(){
+        firebase.database().ref('requests').off();
+    }
+
     filterItems() {
         var result = [];
 
