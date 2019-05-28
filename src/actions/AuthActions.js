@@ -89,6 +89,7 @@ const loginUserSuccess = (dispatch, user , email , password) => {
         })
     
     getCurrentUserData().then(user => {
+        subscribeTopic(user.bloodGroup);
         dispatch(setUser(user));
     })
 }
